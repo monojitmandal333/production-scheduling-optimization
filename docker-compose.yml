@@ -1,0 +1,10 @@
+version: '2'
+services:
+  model:
+    build: .
+    container_name: test
+    command: tail -f /dev/null
+    ports:
+      - 8080:80
+    volumes:
+      - .:/code

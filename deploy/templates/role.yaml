@@ -1,0 +1,13 @@
+{{- if and .Values.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "project.fullname" . }}
+  labels:
+    {{- include "project.labels" . | nindent 4 }}
+  {{- with .Values.rbac.roleAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+rules: []
+{{- end -}}

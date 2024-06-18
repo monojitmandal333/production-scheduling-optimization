@@ -1,0 +1,5 @@
+apiVersion: v2
+name: ea-production-scheduling-optimization
+description: A Helm chart for ea-production-scheduling-optimization
+type: application
+version: 1.0.0

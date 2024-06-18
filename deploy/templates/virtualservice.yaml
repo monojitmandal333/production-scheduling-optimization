@@ -1,0 +1,23 @@
+{{- if and .Values.istio.enabled .Values.istio.hosts -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "project.fullname" . }}
+  labels:
+    {{- include "project.labels" . | nindent 4 }}
+spec:
+  gateways:
+  {{- if eq .Values.istio.type "external"}}
+  - istio-system/external-ingressgateway
+  {{- else }}
+  - {{ include "project.fullname" . }}
+  {{- end }}
+  hosts:
+  {{- range .Values.istio.hosts }}
+  - {{ . | quote }}
+  {{- end }}
+  http:
+  - route:
+    - destination:
+        host: {{ include "project.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+{{- end }}

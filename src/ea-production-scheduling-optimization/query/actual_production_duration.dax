@@ -1,0 +1,20 @@
+/* START QUERY BUILDER */
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Product'[Product Name],
+    'Production Log'[Production Start, Production Log],
+    'Production Log'[Production End, Production Log],
+    'Production Log'[Activity, Production Log],
+    'Production Log'[Run Duration (Hours), Production Log],
+    KEEPFILTERS( FILTER( ALL( Plant[Plant Name] ), SEARCH( "ALBUQUERQUE", Plant[Plant Name], 1, 0 ) >= 1 )),
+    KEEPFILTERS( FILTER( ALL( System[System Name] ), SEARCH( "CHEWY PROCESSING", System[System Name], 1, 0 ) >= 1 )),
+    KEEPFILTERS( FILTER( ALL( 'Fiscal Calendar'[Fiscal Year ID] ), 'Fiscal Calendar'[Fiscal Year ID] = 2023 )),
+    "Event Count, Production Log", [Event Count, Production Log]
+)
+ORDER BY 
+    'Product'[Product Name] ASC,
+    'Production Log'[Production Start, Production Log] ASC,
+    'Production Log'[Production End, Production Log] ASC,
+    'Production Log'[Activity, Production Log] ASC,
+    'Production Log'[Run Duration (Hours), Production Log] ASC
+/* END QUERY BUILDER */

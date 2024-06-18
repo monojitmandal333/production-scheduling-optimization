@@ -1,0 +1,80 @@
+image:
+  repository: "" # provided by CD
+  pullPolicy: IfNotPresent
+  tag: "" # provided by CD
+  containerPort: 8080
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+rbac:
+  # Specifies whether a role and rolebinding should be created
+  create: true
+  # Annotations to add to the role
+  roleAnnotations: {}
+  # Annotations to add to the rolebinding
+  rolebindingAnnotations: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+istio:
+  enabled: true
+  hosts: [] # provided by CD, first element is the "primary" host
+  type: internal # toggled by CD
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false # toggled by CD
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsUser: 1000
+  # fsGroup: 2000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+extraEnvs: # typically provided by CD
+  # MY_ENV_VARIABLE: myvariable
+  # MY_POD_IP:
+  #   valueFrom:
+  #     fieldRef:
+  #       fieldPath: status.podIP
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

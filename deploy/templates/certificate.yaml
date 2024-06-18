@@ -1,0 +1,25 @@
+{{- if and .Values.istio.enabled .Values.istio.hosts -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Namespace }}
+  labels:
+    {{- include "project.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: "{{ .Release.Namespace }}-cert"
+  duration: 2160h0m0s # 90d
+  renewBefore: 360h0m0s # 15d
+  dnsNames:
+  {{- range .Values.istio.hosts }}
+  - {{ . | quote }}
+  {{- end }}
+  issuerRef:
+    name: vault-internal
+    kind: ClusterIssuer
+    group: cert-manager.io
+  secretTemplate:
+    annotations:
+      kubed.appscode.com/sync: "kubernetes.io/metadata.name=istio-system"
+{{- end }}

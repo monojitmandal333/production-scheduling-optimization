@@ -1,0 +1,53 @@
+{{- if eq .Values.istio.type "internal"}}
+{{- if and .Values.istio.enabled .Values.istio.hosts -}}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ include "project.fullname" . }}
+  labels:
+    {{- include "project.labels" . | nindent 4 }}
+  annotations:
+    dns: enabled
+spec:
+  selector:
+    app: internal-ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    {{- range .Values.istio.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    {{- range .Values.istio.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+    tls:
+      mode: SIMPLE
+      credentialName: "{{ .Release.Namespace }}-cert"
+      cipherSuites:
+      - ECDHE-RSA-AES256-GCM-SHA384
+      - ECDHE-RSA-AES256-SHA384
+      - ECDHE-ECDSA-AES256-SHA
+      - ECDHE-RSA-AES256-CBC-SHA
+      - ECDHE-ECDSA-AES128-GCM-SHA256
+      - ECDHE-RSA-AES128-GCM-SHA256
+      - ECDHE-RSA-AES128-SHA256
+      - ECDHE-ECDSA-AES128-SHA
+      - ECDHE-RSA-AES128-CBC-SHA
+      - AES256-GCM-SHA384
+      - AES128-GCM-SHA256
+      - AES256-SHA
+      - AES128-SHA
+      - DES-CBC3-SHA
+      minProtocolVersion: TLSV1_2
+{{- end }}
+{{- end }}

@@ -1,0 +1,11 @@
+.git
+.idea
+.vscode
+project
+scripts
+helm
+docker-compose.yaml
+README.md
+setup.py
+**/.pytest_cache
+**/__pycache__
